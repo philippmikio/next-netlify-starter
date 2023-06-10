@@ -48,9 +48,9 @@ export default function Home() {
       </Head>
 
       <main>
-        <Header title="Welcome to my app!" />
+        <Header title="Hey Nora, welcome to my Graph interface!" />
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          It will get better, don't worry.
         </p>
         <div id="graph-container"></div>
       </main>

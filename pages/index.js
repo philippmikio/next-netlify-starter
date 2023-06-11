@@ -47,15 +47,24 @@ export default function Home() {
       .attr('fill', 'red')
       .attr('stroke', 'black')
       .attr('stroke-width', 2)
-      .on('dblclick', (event, d) => {
+      nodeElements.on('dblclick', (event, clickedNode) => {
+        // Check if all target nodes are currently visible
+        let allTargetVisible = true;
         edges.forEach(edge => {
-          if (edge.source === d || edge.target === d) {
-            nodeMap.get(edge.source.id).visible = !nodeMap.get(edge.source.id).visible;
-            nodeMap.get(edge.target.id).visible = !nodeMap.get(edge.target.id).visible;
-            edge.visible = !edge.visible;
+          if (edge.source === clickedNode) {
+            allTargetVisible = allTargetVisible && edge.target.visible;
           }
         });
-        d.visible = true;
+      
+        // If all target nodes are visible, make them invisible, otherwise make them visible
+        edges.forEach(edge => {
+          if (edge.source === clickedNode) {
+            edge.target.visible = !allTargetVisible;
+            edge.visible = edge.target.visible;
+          }
+        });
+      
+        // Update the graph to reflect the changes
         render();
       });
 
@@ -125,9 +134,18 @@ export default function Home() {
       });
       
       const render = () => {
+        // Show/hide the nodes, edges, and labels based on their visibility status
         nodeElements.attr('display', d => d.visible ? null : 'none');
         textElements.attr('display', d => d.visible ? null : 'none');
-        edgeElements.attr('display', d => d.visible ? null : 'none');
+        edgeElements.attr('display', d => d.visible && d.source.visible && d.target.visible ? null : 'none');
+      
+        // Update the position of nodes, edges, and labels
+        nodeElements.attr('cx', d => d.x).attr('cy', d => d.y);
+        textElements.attr('x', d => d.x).attr('y', d => d.y);
+        edgeElements.attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
       };
       
       const drag = d3.drag()

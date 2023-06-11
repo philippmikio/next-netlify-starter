@@ -11,11 +11,13 @@ export const data = {
       // ...
     ],
     edges: [
-      { source: '3', target: '6' },
-      { source: '2', target: '6' },
-      { source: '1', target: '6' },
-      { source: '4', target: '6' },
-      { source: '5', target: '6' },
+      { source: '6', target: '1' },
+      { source: '6', target: '2' },
+      { source: '6', target: '3' },
+      { source: '6', target: '4' },
+      { source: '1', target: '5' },
+      { source: '6', target: '5' },
+
       // ...
     ]
   };

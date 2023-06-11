@@ -16,7 +16,6 @@ export const data = {
       { source: '1', target: '6' },
       { source: '4', target: '6' },
       { source: '5', target: '6' },
-      { source: '6', target: '6' },
       // ...
     ]
   };

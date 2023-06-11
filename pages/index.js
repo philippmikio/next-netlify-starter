@@ -3,7 +3,7 @@ import Header from '@components/Header';
 import Footer from '@components/Footer';
 import { useEffect } from 'react';
 import * as d3 from 'd3';
-import { data } from './data.js';
+import { data } from '../data.js';
 
 let nodes = data.nodes;
 let edges = data.edges;

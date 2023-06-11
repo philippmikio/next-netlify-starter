@@ -1,5 +1,7 @@
-// data.js
-export const data = {
+import React from 'react';
+
+const DataComponent = () => {
+  const data = {
     nodes: [
       { id: '1', name: 'Philipp', x: 0, y: 0 },
       { id: '2', name: 'Sebastian', x: 0, y: 0 },
@@ -21,4 +23,13 @@ export const data = {
       // ...
     ]
   };
-  
+
+  // Return your React component that uses the data
+  return (
+    <div>
+      {/* Your component JSX here */}
+    </div>
+  );
+};
+
+export default DataComponent;

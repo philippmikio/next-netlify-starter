@@ -1,9 +1,13 @@
 import Head from 'next/head';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { data } from '../data.js';
+import { getDatabase, ref, push } from 'firebase/database';
+import { initializeApp } from "firebase/app";
+
+console.log("Firebase config string: ", process.env.NEXT_PUBLIC_FIREBASE_CONFIG);
 
 let nodes = data.nodes;
 let edges = data.edges;
@@ -16,17 +20,51 @@ edges = edges.map(edge => ({
 }));
 nodes.forEach(node => node.visible = true);
 
+// Initialize Firebase outside of the component
+const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 export default function Home() {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const dbRef = ref(db, 'inputValues');
+    push(dbRef, inputValue)
+      .then(() => {
+        console.log('Submitted:', inputValue);
+        setInputValue(''); // Clear the input value
+      })
+      .catch((error) => {
+        console.error('Error saving input value:', error);
+      });
+  };
+  
   useEffect(() => {
 
     const width = 400;
     const height = 400;
     const radius = 25;
 
+    const handleAddNode = (nodeName, nodeId) => {
+      // Add node to nodes array
+      nodes.push({ id: nodeId, name: nodeName });
+    }
+    
     const svg = d3.select('#graph-container')
       .append('svg')
       .attr('width', 500)
       .attr('height', 500)
+      .call(d3.zoom().on("zoom", function (event) {
+        svg.attr("transform", event.transform);
+      }))
+      .append('g');
 
     // Unified edge definition
     const edgeElements = svg
@@ -35,7 +73,8 @@ export default function Home() {
       .enter()
       .append('line')
       .attr('class', 'edge')
-      .attr('stroke', 'steelblue')
+      .attr('stroke', 'darkblue')
+      .attr('stroke-width', 2)
       .attr('marker-end', 'url(#arrowhead)');
 
     // Unified node definition
@@ -71,14 +110,14 @@ export default function Home() {
     svg.append('defs').append('marker')
       .attr('id', 'arrowhead')
       .attr('viewBox', '-5 -5 10 10')
-      .attr('refX', 10)
+      .attr('refX', 0)
       .attr('refY', 0)
       .attr('markerWidth', 8)
       .attr('markerHeight', 8)
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M 0,0 m -5,-5 L 5,0 L -5,5 Z')
-      .attr('fill', 'steelblue');
+      .attr('fill', 'darkblue');
 
     const textElements = svg.selectAll('text')
       .data(nodes)
@@ -115,13 +154,15 @@ export default function Home() {
             let dx = d.target.x - d.source.x;
             let dy = d.target.y - d.source.y;
             let angle = Math.atan2(dy, dx);
-            return d.target.x - Math.cos(angle) * radius;
+            let offset = 5; // Adjust this value as needed
+            return d.target.x - Math.cos(angle) * (radius + offset);
           })
           .attr("y2", function(d) {
             let dx = d.target.x - d.source.x;
             let dy = d.target.y - d.source.y;
             let angle = Math.atan2(dy, dx);
-            return d.target.y - Math.sin(angle) * radius;
+            let offset = 5; // Adjust this value as needed
+            return d.target.y - Math.sin(angle) * (radius + offset);
           });
         
         nodeElements
@@ -166,25 +207,27 @@ export default function Home() {
       
       nodeElements.call(drag);
       
-        }, []);
+}, []);
       
-        return (
-          <div className="container">
-            <Head>
-              <title>Next.js Starter!</title>
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-      
-            <main>
-              <Header title="Hey Nora, welcome to my Graph interface!" />
-              <p className="description">
-                It will get better, don't worry.
-              </p>
-              <div id="graph-container"></div>
-            </main>
-      
-            <Footer />
-          </div>
-        );
-      }
-      
+return (
+  <div className="container">
+    <Head>
+      <title>Next.js Starter!</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+
+    <main>
+      <Header title="Hey Nora, welcome to my Graph interface!" />
+      <p className="description">It will get better, don't worry.</p>
+      <div id="graph-container"></div>
+
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={inputValue} onChange={handleInputChange} />
+        <button type="submit">Submit</button>
+      </form>
+    </main>
+
+    <Footer />
+  </div>
+);
+}

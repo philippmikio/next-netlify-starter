@@ -48,8 +48,8 @@ export default function Home() {
   
   useEffect(() => {
 
-    const width = 400;
-    const height = 400;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     const radius = 25;
 
     const handleAddNode = (nodeName, nodeId) => {
@@ -58,13 +58,13 @@ export default function Home() {
     }
     
     const svg = d3.select('#graph-container')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 500)
-      .call(d3.zoom().on("zoom", function (event) {
-        svg.attr("transform", event.transform);
-      }))
-      .append('g');
+    .append('svg')
+    .attr('width', width)
+    .attr('height', 800) // Set the height to the desired value
+    .call(d3.zoom().on("zoom", function (event) {
+      svg.attr("transform", event.transform);
+    }))
+    .append('g');
 
     // Unified edge definition
     const edgeElements = svg
@@ -217,7 +217,7 @@ return (
     </Head>
 
     <main>
-      <Header title="Hey Nora, welcome to my Graph interface!" />
+      <Header title="Just some power relationships" />
       <p className="description">It will get better, don't worry.</p>
       <div id="graph-container"></div>
 

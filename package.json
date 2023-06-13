@@ -9,9 +9,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "csv-parser": "^3.0.0",
     "d3": "^7.8.5",
     "firebase": "^9.22.2",
-    "firebase-tools": "^12.3.1",
     "next": "^12.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

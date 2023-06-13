@@ -9,6 +9,7 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyCujuJQGYbaz_3S-UelowfzhGXNZgUJO-w",
   authDomain: "netlify-8c948.firebaseapp.com",
+  databaseURL: "https://netlify-8c948-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "netlify-8c948",
   storageBucket: "netlify-8c948.appspot.com",
   messagingSenderId: "993913833292",
@@ -16,6 +17,7 @@ const firebaseConfig = {
   measurementId: "G-87W5MDF07K"
 };
 
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const analytics = getAnalytics(app); 

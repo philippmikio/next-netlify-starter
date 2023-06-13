@@ -4,10 +4,8 @@ import Footer from '@components/Footer';
 import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { data } from '../data.js';
-import { getDatabase, ref, push } from 'firebase/database';
-import { initializeApp } from "firebase/app";
 
-console.log("Firebase config string: ", process.env.NEXT_PUBLIC_FIREBASE_CONFIG);
+
 
 let nodes = data.nodes;
 let edges = data.edges;
@@ -20,10 +18,6 @@ edges = edges.map(edge => ({
 }));
 nodes.forEach(node => node.visible = true);
 
-// Initialize Firebase outside of the component
-const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG);
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
